@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test renders correctly 1`] = `
+<main
+  className="main className"
+>
+  Name 
+  <span>
+    test
+  </span>
+  <br />
+  <button
+    onClick={[Function]}
+  >
+    Change Name
+  </button>
+  <div>
+    SSR
+  </div>
+  <div />
+  <div>
+    <div>
+      <p
+        className="italic"
+      />
+      <p />
+    </div>
+  </div>
+</main>
+`;

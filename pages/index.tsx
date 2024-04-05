@@ -1,11 +1,51 @@
-import Head from 'next/head'
-import Image from 'next/image'
+import Head from 'next/head';
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
+import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import ErrorBoundary from "./ErrorBoundary";
+import Photos from './Photos';
+import Name from "./Counter";
+import dynamic from 'next/dynamic'
+import useTodoStore from '@/store/ssrStore';
+import AppInitializer from "./AppInitializer";
+
 
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+
+type Post = {
+  userId: number
+  id: number
+  title: string
+  body: string
+}
+
+const DynamicBear = dynamic(() => import('./Bear'), {
+  ssr: false,
+})
+
+export const getServerSideProps = (async () => {
+  // Fetch data from external API
+  const res = await fetch('https://jsonplaceholder.typicode.com/posts/1')
+  const repo: Post = await res.json()
+
+  // TO check For the server side,
+  const dataRes = await fetch("https://api.slingacademy.com/v1/sample-data/photos");
+  const photos: any = await dataRes.json()
+  // console.log('photos', photos.photos);
+  // useTodoStore.setState(photos);
+
+  // Pass data to the page via props
+  return { props: { repo, photos } }
+}) satisfies GetServerSideProps<{ repo: any }>
+
+export default function Home({
+  repo,
+  photos
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+
+  // console.log('useTodoStore.getState().photo',useTodoStore.getState().photos);
+
   return (
     <>
       <Head>
@@ -15,99 +55,26 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={`${styles.main} ${inter.className}`}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
-          </p>
+        
+        <ErrorBoundary>
+          Name <Name />
+        </ErrorBoundary>
+        <AppInitializer photos={photos}>
+          <div>SSR</div>
+          <Photos />
+        </AppInitializer>
+        {/* <Photos /> */}
+        <div>
+
           <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
+            <p className='italic'>{repo?.title}</p>
+            <p>{repo?.body}</p>
+
           </div>
+          <DynamicBear />
+          {/* <Bear/> */}
         </div>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
       </main>
     </>
   )
