@@ -10,6 +10,7 @@ import useTodoStore from '@/store/ssrStore';
 import AppInitializer from "./AppInitializer";
 
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 
@@ -18,6 +19,20 @@ type Post = {
   id: number
   title: string
   body: string
+}
+
+interface IPhoto {
+    photos: []
+}
+
+
+interface Props {
+  repo: {
+    title : string;
+    body: string;
+  };
+  photos: IPhoto
+
 }
 
 const DynamicBear = dynamic(() => import('./Bear'), {
@@ -37,12 +52,13 @@ export const getServerSideProps = (async () => {
 
   // Pass data to the page via props
   return { props: { repo, photos } }
-}) satisfies GetServerSideProps<{ repo: any }>
+}) //satisfies GetServerSideProps<{ repo: any }>
 
 export default function Home({
   repo,
   photos
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+} : Props){
+
 
   // console.log('useTodoStore.getState().photo',useTodoStore.getState().photos);
 
@@ -64,8 +80,8 @@ export default function Home({
           <Photos />
         </AppInitializer>
         {/* <Photos /> */}
+      
         <div>
-
           <div>
             <p className='italic'>{repo?.title}</p>
             <p>{repo?.body}</p>

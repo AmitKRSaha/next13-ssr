@@ -1,4 +1,4 @@
-import Home from "./index";
+import Home from "../pages/index";
 import renderer from 'react-test-renderer';
 
 describe('test', () => {
@@ -8,8 +8,14 @@ describe('test', () => {
     })
 
     it('renders correctly', () => {
+
+        const props ={
+            repo : {},
+            photos: {}
+        }
+
         const tree = renderer
-            .create(<Home page="http://www.facebook.com">Facebook</Home>)
+            .create(<Home />)
             .toJSON();
         expect(tree).toMatchSnapshot();
     });
