@@ -2,17 +2,15 @@ import Head from 'next/head';
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
-import ErrorBoundary from "./ErrorBoundary";
-import Photos from './Photos';
-import Name from "./Counter";
+import ErrorBoundary from "../components/HOC/ErrorBoundary";
+import Photos from '../components/Photos';
+import Name from "../components/Counter";
+import NavBar from "../components/NavBar";
 import dynamic from 'next/dynamic'
 import useTodoStore from '@/store/ssrStore';
-import AppInitializer from "./AppInitializer";
-
-
+import AppInitializer from "../components/HOC/AppInitializer";
 
 const inter = Inter({ subsets: ['latin'] })
-
 
 type Post = {
   userId: number
@@ -35,7 +33,7 @@ interface Props {
 
 }
 
-const DynamicBear = dynamic(() => import('./Bear'), {
+const DynamicBear = dynamic(() => import('../components/Bear'), {
   ssr: false,
 })
 
@@ -70,8 +68,9 @@ export default function Home({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <NavBar />
+
       <main className={`${styles.main} ${inter.className}`}>
-        
         <ErrorBoundary>
           Name <Name />
         </ErrorBoundary>
