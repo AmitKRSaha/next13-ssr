@@ -6,7 +6,7 @@ import ErrorBoundary from "../components/HOC/ErrorBoundary";
 import Photos from '../components/Photos';
 import Name from "../components/Counter";
 import NavBar from "../components/NavBar";
-import dynamic from 'next/dynamic'
+import dynamic from 'next/dynamic';
 import useTodoStore from '@/store/ssrStore';
 import AppInitializer from "../components/HOC/AppInitializer";
 
